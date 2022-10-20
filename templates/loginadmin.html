@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE-edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='style2.css')}}">
+        
+        
+       
+        <title>page 1</title>
+    </head>
+    <body>
+        <span style="height: 100%; margin-left: 54px; overflow: hidden; border-radius: 9px;">
+            <img src="../static/logo.jpg" alt="" height="50px" width="50px" margin-top="30px">
+        </span>
+        <div class="container">
+            <div class="form">
+                <div class="btn">
+                    <a href="signup">
+                    <button class="signUpBtn"> SIGN UP</button></a>
+                    <a href="login">
+                    <button class="loginBtn"> LOG IN</button></a>
+                    <a href="loginadmin">
+                    <button class="adminBtn"> ADMIN</button></a>
+                </div>
+
+                <!-- create login admin page -->
+                <form action="" method="post" class="login">
+                    <div class="formGroup">
+                        <input type="name" name="name" id="Name" placeholder="Name" autocomplete="off">
+                    </div>
+                    <div class="formGroup">
+                        <input type="password" name="password" id="password" placeholder="Password" autocomplete="off">
+                    </div>
+                    
+                    
+                    <div class="formGroup">
+                        <button type="submit" class="btn2">LOGIN ADMIN</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+  
+    </body>
+</html>
