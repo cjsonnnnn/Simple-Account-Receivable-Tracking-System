@@ -18,6 +18,7 @@
             width: 100%;
             height: 100%;
             font-family: Helvetica, Arial, sans-serif;
+            overflow: hidden;
         }
 
         img {
@@ -25,6 +26,10 @@
             width: 100%;
             max-width: 100%;
             object-fit: cover;
+        }
+
+        #tableTray::-webkit-scrollbar {
+            display: none;
         }
 
 
@@ -116,6 +121,38 @@
             padding: 20px 12px;
         }
 
+        #custMainTable .tdStatus {
+            padding: 10px 0px;
+
+        }
+
+        #custMainTable .tdStatus div {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            justify-content: space-around;
+            text-align: start;
+        }
+
+        #custMainTable .tdStatusTrans a {
+            height: 38px;
+            border-radius: 9px;
+            width: 45%;
+            border: none;
+            cursor: pointer;
+            color: white;
+        }
+
+        #custMainTable .tdStatusTrans .blacklistHref {
+            background-color: #57b16c;
+            /* or, #28a745 */
+        }
+
+        #custMainTable .tdStatusTrans .editHref {
+            background-color: #d1636e;
+            /* or #dc3545 */
+        }
+
 
         /* input stuffs */
         #inputNominal:active,
@@ -156,6 +193,34 @@
         }
 
 
+        /* Edit Profile Manager */
+        #containerFormEditProfileCust {
+            margin: 27px auto;
+            width: 50%;
+            border: 2px solid rgb(127, 225, 255);
+            border-radius: 27px;
+            padding: 36px 45px;
+            font-size: 18px;
+        }
+
+        .labelEditCustomer {
+            margin-top: 11px;
+            margin-bottom: 4px;
+            font-size: 18px;
+        }
+
+
+        .inputEditCustomer,
+        .inputEditCustomer:active {
+            margin-bottom: 11px;
+            outline: none;
+            border: none;
+            border-bottom: 2px solid rgb(127, 225, 255);
+            width: 90%;
+            font-size: 18px;
+        }
+
+
         /* responsive stuffs */
         @media only screen and (min-width: 486px) and (max-width: 756px) {
             #custNavbar ul {
@@ -171,7 +236,6 @@
             #custNavbar #logo {
                 margin-left: 18px;
                 height: 63%;
-                background-color: blue;
             }
 
             #custNavbar li {
@@ -218,9 +282,11 @@
 <body>
     <header>
         <div id="custNavbar">
+            {% block logoLink %}
             <a href="{{ url_for('custPage') }}" id="logo">
                 <img src="static/3e.png" alt="" style="cursor: pointer;">
             </a>
+            {% endblock %}
             <ul>
                 {% block additionalLinkNav %}
                 <li>
@@ -240,7 +306,7 @@
     <main>
         <br>
         <div style="text-align: center;">
-            <h1>{% block titleContent %}Transaction{% endblock %}</h1>
+            <h1>{% block titleContent %}Your Transactions{% endblock %}</h1>
         </div>
         {% block mainContent %}
         <div id="tableTray">
@@ -251,7 +317,7 @@
                     <th>Date</th>
                     <th>Due</th>
                     <th>Status</th>
-                    <th>Bill</th>
+                    <th>Action</th>
                 </tr>
                 {% for tran in custTransactions %}
                 <tr class="trTD">
@@ -260,7 +326,17 @@
                     <td>{{tran.sale_date}}</td>
                     <td>{{tran.payment_date}}</td>
                     <td>{{tran.remark_id}}</td>
-                    <td>EMPTY</td>
+                    <td>
+                        {% if tran.remark_id == "ACCEPTED" %}
+                        <div>
+                            <a href="{{ url_for('payProcess', inv_id=tran.invoice_id) }}"
+                                style="background-color: #28a745; padding: 14px 32px; border-radius: 10px; text-decoration: none; color: white; margin-bottom: 9px;"
+                                class="blacklistHref">PAY</a>
+                        </div>
+                        {% else %}
+                        -
+                        {% endif %}
+                    </td>
                 </tr>
                 {% endfor %}
             </table>

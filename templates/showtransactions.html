@@ -1,0 +1,42 @@
+{% extends "custPage.html" %}
+
+{% block title %} Show Transactions {% endblock %}
+{% block logoLink %}
+<a href="{{ url_for('managerMain') }}" id="logo">
+    <img src="static/3e.png" alt="" style="cursor: pointer;">
+</a>
+{% endblock %}
+{% block additionalLinkNav %}{% endblock %}
+{% block titleContent %}Transactions of {{custName}}{% endblock %}
+{% block mainContent %}
+<div id="tableTray">
+    <table id="custMainTable">
+        <tr class="trTH">
+            <th>Invoice ID</th>
+            <th>Total</th>
+            <th>Date</th>
+            <th>Due</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+        {% for tran in custTransactions %}
+        <tr class="trTD">
+            <td>{{tran.invoice_id}}</td>
+            <td>{{tran.total}}</td>
+            <td>{{tran.sale_date}}</td>
+            <td>{{tran.payment_date}}</td>
+            <td>{{tran.remark_id}}</td>
+            <td>
+                {% if tran.remark_id == "PAID" %}
+                <a href="{{ url_for('voidTransaction', inv_id=tran.invoice_id, cust_id=custo_id)}}"
+                    style="background-color: #d1636e; padding: 14px 62px; border-radius: 10px; text-decoration: none; color: white;">VOID</a>
+                {% elif tran.remark_id == "CANCELED" %}
+                <a href="{{ url_for('uncanceledTransaction', inv_id=tran.invoice_id, cust_id=custo_id)}}"
+                    style="background-color: #28a745; padding: 14px 27px; border-radius: 10px; text-decoration: none; color: white;">UNCANCELED</a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}
