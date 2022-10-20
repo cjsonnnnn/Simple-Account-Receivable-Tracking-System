@@ -128,6 +128,10 @@ class PaymentInvoice(db.Model):
 
 # functions
 # customer page stuffs
+@app.route("/")
+def home():
+    return render_template("login.html")
+
 @app.route("/cust")
 def custPage():
     curCust = session["customer_id"]
