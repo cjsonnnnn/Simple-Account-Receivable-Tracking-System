@@ -150,7 +150,7 @@ class RoleType(db.Model):
 
 
 # functions
-# cust stuffs
+# customer page stuffs
 @app.route("/cust")
 def custPage():
     session["curcust"] = "c-20221018180102"
@@ -185,11 +185,6 @@ def newtransactionProcess():
 
     # go back to cust page
     return redirect(url_for('custPage'))
-
-@app.route("/view")
-def viewIt():
-    # return render_template("view.html",  values=Customer.query.all(), transactions=SaleInvoice.query.filter_by(customer_id="c2").all())
-    return render_template("view.html",  values=Customer.query.all())
 
 
 
