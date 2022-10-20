@@ -34,7 +34,7 @@ class Customer(db.Model):
         self.address = address
         self.tel_num = tel_num
         self.password = password
-        self.status = "not defined"
+        self.status = "ACTIVE"
 
 
 class ActivityType(db.Model):
@@ -54,20 +54,24 @@ class Employee(db.Model):
     employee_id = db.Column(db.String(200), primary_key=True)
     name = db.Column(db.String(200), nullable=False)
     password = db.Column(db.String(200), unique=True, nullable=False)
-    role_id = db.Column(db.String(200), db.ForeignKey('roletype.role_id'), nullable=False)
+    role = db.Column(db.String(200), nullable=False)
     
 
     mActivity_re = db.relationship("ManagerActivity")
     pInvoice_re = db.relationship("PaymentInvoice", backref="payment_invoice")
     sInvoice_re = db.relationship("SaleInvoice")
 
-    def __init__(self, employee_id, name, password,role_id):
-        self.employee_id = employee_id
+    def __init__(self, name, password, role):
+        if role == "admin_sale":
+            self.employee_id = "s-" + datetime.now().strftime('%Y%m%d%H%M%S')
+        elif role == "admin_finance":
+            self.employee_id = "f-" + datetime.now().strftime('%Y%m%d%H%M%S')
+        elif role == "manager":
+            self.employee_id = "m-" + datetime.now().strftime('%Y%m%d%H%M%S')
         self.name = name
         self.password = password
-        self.role_id = role_id
+        self.role = role
         
-
 
 class ManagerActivity(db.Model):
     __tablename__ = "manager_activity"
@@ -94,7 +98,7 @@ class SaleInvoice(db.Model):
 
     pInvoice_re = db.relationship("PaymentInvoice")
 
-    def __init__(self, total, customer_id, duration, remark_id, employee_id="NDAK ADA"):
+    def __init__(self, total, customer_id, duration, remark_id, employee_id="NULL"):
         self.invoice_id = "inv-" + datetime.now().strftime('%Y%m%d%H%M%S')
         self.sale_date = datetime.now().strftime('%Y-%m-%d')
         self.payment_date = (datetime.now() + timedelta(days=duration*30)).strftime('%Y-%m-%d')   # will be revised
@@ -113,18 +117,6 @@ class PaymentInvoice(db.Model):
     def __init__(self, invoice_id, employee_id):
         self.invoice_id = invoice_id
         self.employee_id = employee_id
-
-
-class RoleType(db.Model):
-    __tablename__ = "roletype"
-    role_id = db.Column(db.String(200), primary_key=True)
-    description = db.Column(db.String(200), nullable=False)
-
-    employee_re = db.relationship("Employee", backref="employee")
-
-    def __init__(self, role_id, description):
-        self.role_id = role_id
-        self.description = description
 
 
 
@@ -212,27 +204,191 @@ def signup():
 def loginadmin(): 
     if request.method == 'POST':
         adminName = request.form['name']
-        session["adminName"] = adminName
-        # return redirect(url_for('cust'))
 
         found_admin = Employee.query.filter_by(name=adminName).first()
         if found_admin:
-            session['password'] = found_admin.password
-            if found_admin.role_id == 'a1':
-                return redirect(url_for("dummy")) #admin sale page
-            elif found_admin.role_id == 'a2':
-                return redirect(url_for("dummy")) #admin finance page
-            else:
-                return redirect(url_for("dummy")) #admin manager page
-        else:
-           return redirect(url_for("loginadmin"))
+            if request.form["password"] == found_admin.password:
+                if found_admin.role == 'admin_sale':
+                    session["admin_sale_id"] = found_admin.employee_id
+                    return redirect(url_for("get_invoice_admin")) #admin sale page
+                elif found_admin.role == 'admin_finance':
+                    session["admin_finance_id"] = found_admin.employee_id
+                    return redirect(url_for("get_invoice_sale")) #admin finance page
+                else:
+                    session["manager_id"] = found_admin.employee_id
+                    return redirect(url_for("signup")) #admin manager page
+
+        return redirect(url_for("loginadmin"))
     else:
         return render_template('loginadmin.html')
 
 @app.route('/logout')
 def logout(): 
     session.pop("customer_id", None)
+    session.pop("admin_sale_id", None)
+    session.pop("admin_finance_id", None)
+    session.pop("manager_id", None)
     return redirect(url_for("login"))
+
+
+
+# admin sale and admin finance stuffs
+@app.route("/sales", methods=["GET", "POST"])
+def get_invoice_admin():
+    a = SaleInvoice.query.all()
+    invoice_id = []
+    sale_date = []
+    payment_date = []
+    total = []
+    employee_id = []
+    customer_id = []
+    remark = []
+
+    if request.form != None:
+        for i in request.form.keys():
+            b = SaleInvoice.query.filter_by(invoice_id=i).first()
+            b.remark_id = request.form[i]
+            db.session.commit()
+
+    for i in a:
+        invoice_id.append(i.invoice_id)
+        sale_date.append(i.sale_date)
+        payment_date.append(i.payment_date)
+        total.append(i.total)
+        employee_id.append(i.employee_id)
+        customer_id.append(i.customer_id)
+        remark.append(i.remark_id)
+
+    for i in range(len(remark)):
+
+        # replace hardik with shardul
+        if remark[i] == "0":
+            remark[i] = "Not Registered"
+
+        # replace pant with ishan
+        elif remark[i] == "1":
+            remark[i] = "Have Not Paid"
+
+        elif remark[i] == "2":
+            remark[i] = "Paid"
+
+    table = []
+    for i in range(len(invoice_id)):
+        table.append(
+            [
+                invoice_id[i],
+                sale_date[i],
+                payment_date[i],
+                total[i],
+                employee_id[i],
+                customer_id[i],
+                remark[i],
+                invoice_id[i],
+            ]
+        )
+
+    return render_template("admin_sale.html", data=table)
+
+@app.route("/finance", methods=["GET", "POST"])
+def get_invoice_sale():
+    a = SaleInvoice.query.all()
+    invoice_id = []
+    sale_date = []
+    payment_date = []
+    total = []
+    employee_id = []
+    customer_id = []
+    remark = []
+
+    param = dict()
+    for i in request.form.keys():
+        param[i] = request.form.getlist(i)
+
+    for i in param.keys():
+        if param[i][0] != "":
+            b = SaleInvoice.query.filter_by(invoice_id=i).first()
+            b.remark_id = param[i][1]
+            b.payment_date = param[i][0]
+            db.session.commit()
+        else:
+            b = SaleInvoice.query.filter_by(invoice_id=i).first()
+            b.remark_id = param[i]
+            db.session.commit()
+
+    for i in a:
+        invoice_id.append(i.invoice_id)
+        sale_date.append(i.sale_date)
+        payment_date.append(i.payment_date)
+        total.append(i.total)
+        employee_id.append(i.employee_id)
+        customer_id.append(i.customer_id)
+        remark.append(i.remark_id)
+
+    notdone = []
+
+    for i in range(len(remark)):
+
+        # replace hardik with shardul
+        if remark[i] == "0":
+            notdone.append(i)
+
+        # replace pant with ishan
+        elif remark[i] == "1":
+            remark[i] = "Have Not Paid"
+
+        elif remark[i] == "2":
+            remark[i] = "Paid"
+
+    table = []
+    for i in range(len(invoice_id)):
+        table.append(
+            [
+                invoice_id[i],
+                sale_date[i],
+                payment_date[i],
+                total[i],
+                employee_id[i],
+                customer_id[i],
+                remark[i],
+                invoice_id[i],
+            ]
+        )
+
+    table = [j for i, j in enumerate(table) if i not in notdone]
+
+    return render_template("admin_finance.html", data=table)
+
+@app.route("/blacklist", methods=["GET", "POST"])
+def blacklist():
+    a = Customer.query.filter_by(status="Blacklisted").all()
+
+    cust_id = []
+    name = []
+    address = []
+    tel_num = []
+    status = []
+
+    if request.form != None:
+        for i in request.form.keys():
+            b = Customer.query.filter_by(customer_id=i).first()
+            b.status = request.form[i]
+            db.session.commit()
+
+    for i in a:
+        cust_id.append(i.customer_id)
+        name.append(i.name)
+        address.append(i.address)
+        tel_num.append(i.tel_num)
+        status.append(i.status)
+
+    table = []
+    for i in range(len(cust_id)):
+        table.append(
+            [cust_id[i], name[i], address[i], tel_num[i], status[i], cust_id[i]]
+        )
+
+    return render_template("blacklist.html", data=table)
+
 
 
 
@@ -241,8 +397,8 @@ if __name__ == "__main__":
         db.create_all()
 
         # dummy data
-        # newCust = Customer("Jason", "sersan an", "239123", "sdkaks")
-        # db.session.add(newCust)
+        # newAdmin = Employee("caleb", "cal009", "admin_sale")
+        # db.session.add(newAdmin)
         # db.session.commit()
 
         # total, customer_id, duration, remark_id, employee_id="NDAK ADA"
