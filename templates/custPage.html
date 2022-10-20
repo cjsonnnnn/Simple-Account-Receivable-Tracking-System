@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3E |{% block title %} Customer Page {% endblock %}</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            padding: 0px;
+            margin: 0px;
+            width: 100%;
+            height: 100%;
+            font-family: Helvetica, Arial, sans-serif;
+        }
+
+        img {
+            height: 100%;
+            width: 100%;
+            max-width: 100%;
+            object-fit: cover;
+        }
+
+
+        /* customer navbar */
+        #custNavbar {
+            background-color: rgb(127, 225, 255);
+            height: 72px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 0px;
+        }
+
+        #custNavbar ul {
+            list-style-type: none;
+            margin-right: 54px;
+            font-size: 18px;
+            padding: 0px;
+            width: 40%;
+            text-align: end;
+        }
+
+        #custNavbar li {
+            text-align: center;
+            padding: 12px 0px;
+            display: inline;
+        }
+
+        .linkNav {
+            border-radius: 9px;
+            background-color: rgb(255, 255, 255);
+            border: 0px;
+            padding: 12px 18px;
+            cursor: pointer;
+            margin-left: 18px;
+            text-decoration: none;
+            color: black;
+        }
+
+
+        /* the customer table / main content */
+        #tableTray {
+            overflow-y: scroll;
+            overflow-x: hidden;
+            border-radius: 27px;
+            padding: 0;
+            margin: 0;
+            margin: 27px auto;
+            width: 90%;
+            height: 400px;
+        }
+
+        #custMainTable {
+            font-size: 18px;
+            border-collapse: collapse;
+            overflow: scroll;
+        }
+
+        #custMainTable .trTH {
+            height: 27px;
+            background-color: rgb(127, 225, 255);
+            font-size: 20px;
+            border-bottom: 4px solid white;
+            text-align: center;
+        }
+
+        #custMainTable .trTD {
+            height: 18px;
+            font-size: 16px;
+            border-bottom: 4px solid rgb(127, 225, 255);
+            text-align: center;
+        }
+
+        #custMainTable td,
+        #custMainTable th {
+            column-width: 185px;
+            padding: 22px 12px;
+            height: 100%;
+        }
+
+        #custMainTable td {
+            padding: 20px 12px;
+        }
+
+
+        /* input stuffs */
+        #inputNominal:active,
+        #inputNominal {
+            border: none;
+            outline: none;
+            border-bottom: 2px solid black;
+            width: 300px;
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+
+        /* radio */
+        input[type=radio] {
+            display: none;
+        }
+
+        label {
+            cursor: pointer;
+        }
+
+        input[type=radio]:checked+label {
+            background-color: rgb(127, 225, 255);
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div id="custNavbar">
+            <a style="height: 100%; margin-left: 54px; overflow: hidden; border-radius: 9px;"
+                href="{{ url_for('custPage') }}">
+                <img src="static/3e.png" alt="" style="cursor: pointer;">
+            </a>
+            <ul>
+                {% block additionalLinkNav %}
+                <li>
+                    <a class="linkNav" href="{{ url_for('newTransaction') }}">
+                        Add Transaction
+                    </a>
+                </li>
+                {% endblock %}
+                <li>
+                    <a class="linkNav">
+                        Logout
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </header>
+
+    <main>
+        <br>
+        <div style="text-align: center;">
+            <h1>{% block titleContent %}Transaction{% endblock %}</h1>
+        </div>
+        {% block mainContent %}
+        <div id="tableTray">
+            <table id="custMainTable">
+                <tr class="trTH">
+                    <th>Invoice ID</th>
+                    <th>Total</th>
+                    <th>Date</th>
+                    <th>Due</th>
+                    <th>Status</th>
+                    <th>Bill</th>
+                </tr>
+                {% for tran in custTransactions %}
+                <tr class="trTD">
+                    <td>{{tran.invoice_id}}</td>
+                    <td>{{tran.total}}</td>
+                    <td>{{tran.sale_date}}</td>
+                    <td>{{tran.payment_date}}</td>
+                    <td>{{tran.remark_id}}</td>
+                    <td>EMPTY</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        {% endblock %}
+        <br>
+        <br>
+    </main>
+    {% block script %}
+    {% endblock %}
+</body>
+
+</html>
