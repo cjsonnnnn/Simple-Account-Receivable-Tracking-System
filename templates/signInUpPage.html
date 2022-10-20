@@ -1,86 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE-edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="style.css">
-        
-        <!-- jquery cdn link to hide/show form -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-        <title>page 1</title>
-    </head>
-    <body>
-        <div class="container">
-            <div class="form">
-                <div class="btn">
-                    <button class="signUpBtn"> SIGN UP</button>
-                    <button class="loginBtn"> LOG IN</button>
-                    <button class="adminBtn"> ADMIN</button>
-                </div>
-                <form action="" class="signUp">
-                    <div class="formGroup">
-                        <input type="text" name="name" ide="user name" placeholder="User Name" autocomplete="off">
-                    </div>
-                    <div class="formGroup">
-                        <input type="email" name="email" id="Email" placeholder="Email ID" autocomplete="off">
-                    </div>
-                    <div class="formGroup">
-                        <input type="password" name="password" id="password" placeholder="Password" autocomplete="off">
-                    </div>
-                    <div class="formGroup">
-                        <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password" autocomplete="off">
-                    </div>
-                    <!-- Adding check box -->
-                    <div class="checkBox">
-                        <input type="checkbox" name="checkbox" id="checkbox">
-                        <span class="text"> I agree with term & conditions.</span>
-                    </div>
-                    <div class="formGroup">
-                        <button class="btn2">REGISTER</button>
-                    </div>
-                </form>
 
-                <!-- create login cust page -->
-                <form action="" class="login">
-                    <div class="formGroup">
-                        <input type="email" name="email" id="Email" placeholder="Email ID" autocomplete="off">
-                    </div>
-                    <div class="formGroup">
-                        <input type="password" name="password" id="password" placeholder="Password" autocomplete="off">
-                    </div>
-                    
-                    <!-- Adding check box -->
-                    <div class="checkBox">
-                        <input type="checkbox" name="checkbox" id="checkbox">
-                        <span class="text"> keep me signed in on this device</span>
-                    </div>
-                    <div class="formGroup">
-                        <button class="btn2">LOGIN</button>
-                    </div>
-                </form>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE-edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
 
-                <!-- create login admin page -->
-                <form action="" class="loginAdmin">
-                    <div class="formGroup">
-                        <input type="email" name="email" id="Email" placeholder="Admin ID" autocomplete="off">
-                    </div>
-                    <div class="formGroup">
-                        <input type="password" name="password" id="password" placeholder="Password" autocomplete="off">
-                    </div>
-                    
-                    <!-- Adding check box -->
-                    <div class="checkBox">
-                        <input type="checkbox" name="checkbox" id="checkbox">
-                        <span class="text"> keep me signed in on this device</span>
-                    </div>
-                    <div class="formGroup">
-                        <button class="btn2">LOGIN ADMIN</button>
-                    </div>
-                </form>
+    <!-- jquery cdn link to hide/show form -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <title>3E | Sign In</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="form">
+            <div class="btn">
+                <button class="signUpBtn"> SIGN UP</button>
+                <button class="loginBtn"> LOG IN</button>
+                <button class="adminBtn"> ADMIN</button>
             </div>
+            <form action="" class="signUp">
+                <div class="formGroup">
+                    <input type="text" name="name" ide="user name" placeholder="User Name" autocomplete="off">
+                </div>
+                <div class="formGroup">
+                    <input type="email" name="email" id="Email" placeholder="Email ID" autocomplete="off">
+                </div>
+                <div class="formGroup">
+                    <input type="password" name="password" id="password" placeholder="Password" autocomplete="off">
+                </div>
+                <div class="formGroup">
+                    <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password"
+                        autocomplete="off">
+                </div>
+                <!-- Adding check box -->
+                <div class="checkBox">
+                    <input type="checkbox" name="checkbox" id="checkbox">
+                    <span class="text"> I agree with term & conditions.</span>
+                </div>
+                <div class="formGroup">
+                    <button class="btn2">REGISTER</button>
+                </div>
+            </form>
+
+            <!-- create login cust page -->
+            <form action="" class="login">
+                <div class="formGroup">
+                    <input type="email" name="email" id="Email" placeholder="Email ID" autocomplete="off">
+                </div>
+                <div class="formGroup">
+                    <input type="password" name="password" id="password" placeholder="Password" autocomplete="off">
+                </div>
+
+                <!-- Adding check box -->
+                <div class="checkBox">
+                    <input type="checkbox" name="checkbox" id="checkbox">
+                    <span class="text"> keep me signed in on this device</span>
+                </div>
+                <div class="formGroup">
+                    <button class="btn2">LOGIN</button>
+                </div>
+            </form>
+
+            <!-- create login admin page -->
+            <form action="" class="loginAdmin">
+                <div class="formGroup">
+                    <input type="email" name="email" id="Email" placeholder="Admin ID" autocomplete="off">
+                </div>
+                <div class="formGroup">
+                    <input type="password" name="password" id="password" placeholder="Password" autocomplete="off">
+                </div>
+
+                <!-- Adding check box -->
+                <div class="checkBox">
+                    <input type="checkbox" name="checkbox" id="checkbox">
+                    <span class="text"> keep me signed in on this device</span>
+                </div>
+                <div class="formGroup">
+                    <button class="btn2">LOGIN ADMIN</button>
+                </div>
+            </form>
         </div>
-        <!-- adding js -->
-        <script src="hideShow.js"></script>
-    </body>
+    </div>
+    <!-- adding js -->
+    <script src="hideShow.js"></script>
+</body>
+
 </html>

@@ -115,18 +115,6 @@ class PaymentInvoice(db.Model):
         self.employee_id = employee_id
 
 
-# class RemarkType(db.Model):
-#     __tablename__ = "remarktype"
-#     remark_id = db.Column(db.String(200), primary_key=True)
-#     description = db.Column(db.String(200), nullable=False)
-
-#     sInvoice_re = db.relationship("SaleInvoice")
-
-#     def __init__(self, remark_id, description):
-#         self.remark_id = remark_id
-#         self.description = description
-
-
 class RoleType(db.Model):
     __tablename__ = "roletype"
     role_id = db.Column(db.String(200), primary_key=True)
@@ -183,10 +171,8 @@ def newtransactionProcess():
     return redirect(url_for('custPage'))
 
 
-# @app.route('/')
-# def dummy() :
-#     return render_template("dummy.html")
-    
+
+# login and signup stuffs
 @app.route('/login', methods=['GET', 'POST'])
 def login(): 
     if request.method == 'POST':
@@ -201,12 +187,9 @@ def login():
         return redirect(url_for("signup"))
     else:
         return render_template('login.html')
-      
 
 @app.route('/signup', methods=['GET', 'POST'])
-def signup():   
-    # cust = 
-    # # session["cust_name"] = cust
+def signup():
     # found_cust = Customer.query.filter_by(name=request.form['name']).first() 
     if request.method == 'POST':
         cust = request.form['name']
@@ -224,7 +207,6 @@ def signup():
             return redirect(url_for("login"))
     else:
         return render_template('signup.html')
-      
 
 @app.route('/loginadmin', methods=['GET', 'POST'])
 def loginadmin(): 
@@ -246,7 +228,6 @@ def loginadmin():
            return redirect(url_for("loginadmin"))
     else:
         return render_template('loginadmin.html')
-
 
 @app.route('/logout')
 def logout(): 

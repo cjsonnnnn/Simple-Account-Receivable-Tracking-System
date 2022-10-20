@@ -9,35 +9,24 @@
         <!-- Nominal -->
         <div>
             <span style="padding: 15px; font-size: 27px;">Nominal:</span>
-            <input type="number" id="inputNominal" min="100000" max="1000000" value="100000" step="100000" path="note"
+            <input type="number" id="inputNominal" min="100000" max="1000000" value="100000" step="100000"
                 name="nominal">
         </div>
 
         <!-- Duration Range -->
-        <div style=" display: flex; justify-content: start;">
-            <input type="radio" value="1" class="durRent" name="durR" id="onemonth" checked>
-            <label
-                style="padding: 27px 12px; border: 2px solid rgb(127, 225, 255); width: 22%; margin: 18px; border-radius: 18px; text-align: center; font-size: 18px;"
-                for="onemonth">
-                1 Month (10%)</label>
+        <div style=" display: flex; justify-content: space-around; flex-wrap: wrap;" id="durTray">
+            <!-- responsive 1 -->
+            <input type="radio" value="1" class="durRent " name="durR" id="onemonth" checked>
+            <label class="labelRadio" for="onemonth">1 Month (10%)</label>
 
-            <input type="radio" value="3" class="durRent" name="durR" id="threemonth">
-            <label
-                style="padding: 27px 12px; border: 2px solid rgb(127, 225, 255); width: 22%; margin: 18px; border-radius: 18px; text-align: center; font-size: 18px;"
-                for="threemonth">
-                3 Months (18%)</label>
+            <input type="radio" value="3" class="durRent " name="durR" id="threemonth">
+            <label class="labelRadio" for="threemonth">3 Months (18%)</label>
 
-            <input type="radio" value="6" class="durRent" name="durR" id="sixmonth">
-            <label
-                style="padding: 27px 12px; border: 2px solid rgb(127, 225, 255); width: 22%; margin: 18px; border-radius: 18px; text-align: center; font-size: 18px;"
-                for="sixmonth">
-                6 Months (23%)</label>
+            <input type="radio" value="6" class="durRent " name="durR" id="sixmonth">
+            <label class="labelRadio" for="sixmonth">6 Months (23%)</label>
 
-            <input type="radio" value="12" class="durRent" name="durR" id="oneyear">
-            <label
-                style="padding: 27px 12px; border: 2px solid rgb(127, 225, 255); width: 22%; margin: 18px; border-radius: 18px; text-align: center; font-size: 18px;"
-                for="oneyear">
-                1 Year (27%)</label>
+            <input type="radio" value="12" class="durRent " name="durR" id="oneyear">
+            <label class="labelRadio" for="oneyear">1 Year (27%)</label>
         </div>
 
         <!-- submit -->
@@ -49,7 +38,8 @@
         <!-- sk -->
         <br><br><br>
         <div>S.K:</div>
-        <span>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Debitis enim nemo officiis nihil, necessitatibus
+        <span>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Debitis enim nemo officiis nihil,
+            necessitatibus
             corrupti doloribus voluptates velit.</span>
     </form>
 </div>
