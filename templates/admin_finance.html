@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Finance</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        padding: 0px;
+        margin: 0px;
+        width: 100%;
+        height: 100%;
+        font-family: Helvetica, Arial, sans-serif;
+      }
+
+      img {
+        height: 100%;
+        width: 100%;
+        max-width: 100%;
+        object-fit: cover;
+      }
+
+      /* customer navbar */
+      #custNavbar {
+        background-color: rgb(127, 225, 255);
+        height: 72px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 4px 0px;
+      }
+
+      #custNavbar #logo {
+        height: 100%;
+        margin-left: 54px;
+        overflow: hidden;
+        border-radius: 9px;
+      }
+
+      #custNavbar ul {
+        list-style-type: none;
+        margin-right: 54px;
+        font-size: 18px;
+        padding: 0px;
+        width: 40%;
+        text-align: end;
+      }
+
+      #custNavbar li {
+        text-align: center;
+        padding: 12px 0px;
+        display: inline;
+      }
+
+      .linkNav {
+        border-radius: 9px;
+        background-color: rgb(255, 255, 255);
+        border: 0px;
+        padding: 12px 18px;
+        cursor: pointer;
+        margin-left: 18px;
+        text-decoration: none;
+        color: black;
+      }
+
+      /* the customer table / main content */
+      #tableTray {
+        overflow-y: auto;
+        overflow-x: auto;
+        border-radius: 27px;
+        padding: 0;
+        margin: 0;
+        margin: 27px auto;
+        width: 90%;
+        height: 400px;
+      }
+
+      #custMainTable {
+        font-size: 18px;
+        border-collapse: collapse;
+        overflow: scroll;
+      }
+
+      #custMainTable .trTH {
+        height: 27px;
+        background-color: rgb(127, 225, 255);
+        font-size: 20px;
+        border-bottom: 4px solid white;
+        text-align: center;
+      }
+
+      #custMainTable .trTD {
+        height: 18px;
+        font-size: 16px;
+        border-bottom: 4px solid rgb(127, 225, 255);
+        text-align: center;
+      }
+
+      #custMainTable td,
+      #custMainTable th {
+        column-width: 185px;
+        padding: 22px 12px;
+        height: 100%;
+      }
+
+      #custMainTable td {
+        padding: 20px 12px;
+      }
+
+      /* input stuffs */
+      #inputNominal:active,
+      #inputNominal {
+        border: none;
+        outline: none;
+        border-bottom: 2px solid black;
+        width: 300px;
+        font-size: 22px;
+        margin-bottom: 15px;
+      }
+
+      /* radio */
+      input[type="radio"] {
+        display: none;
+      }
+
+      label {
+        cursor: pointer;
+      }
+
+      input[type="radio"]:checked + label {
+        background-color: rgb(127, 225, 255);
+      }
+
+      .labelRadio {
+        padding: 27px 12px;
+        border: 2px solid rgb(127, 225, 255);
+        width: 20%;
+        margin: 18px;
+        border-radius: 18px;
+        font-size: 18px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+      }
+
+      /* responsive stuffs */
+      @media only screen and (min-width: 486px) and (max-width: 756px) {
+        #custNavbar ul {
+          width: 70%;
+        }
+      }
+
+      @media only screen and (max-width: 485px) {
+        #custNavbar {
+          height: 140px;
+        }
+
+        #custNavbar #logo {
+          margin-left: 18px;
+          height: 63%;
+          background-color: blue;
+        }
+
+        #custNavbar li {
+          display: block;
+          text-align: end;
+        }
+
+        #custNavbar ul {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-around;
+          height: 90%;
+          width: 70%;
+          margin-right: 18px;
+        }
+      }
+
+      @media only screen and (min-width: 468px) and (max-width: 873px) {
+        .labelRadio {
+          width: 40%;
+        }
+      }
+
+      @media only screen and (max-width: 467px) {
+        .labelRadio {
+          width: 72%;
+        }
+
+        #durTray {
+          margin-bottom: 18px;
+        }
+      }
+
+      @media only screen and (max-width: 558px) {
+        #inputNominal:active,
+        #inputNominal {
+          width: 40%;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <div id="custNavbar">
+        <a id="logo">
+          <img src="static/3e.png" alt="" style="cursor: pointer" />
+        </a>
+        <ul>
+          <li>
+            <a class="linkNav" href="{{ url_for('logout') }}"> Logout </a>
+          </li>
+        </ul>
+      </div>
+    </header>
+    <main>
+      <form action="/finance" method="post">
+        <div id="tableTray">
+          <table id="custMainTable" cellspacing="0" cellpadding="12">
+            <tr class="trTH">
+              <th scope="col">Invoice ID</th>
+              <th scope="col">Sale date</th>
+              <th scope="col">Payment date</th>
+              <th scope="col">Total</th>
+              <th scope="col">Employee ID</th>
+              <th scope="col">Customer ID</th>
+              <th scope="col">Remark</th>
+            </tr>
+
+            {% for item in data %}
+            <tr class="trTD">
+              <td>{{item[0]}}</td>
+              <td>{{item[1]}}</td>
+              <td>
+                {% if item[2] != "" %}
+                <input
+                  type="date"
+                  id="paymentdate"
+                  name="{{item[7]}}"
+                  value="{{item[2]}}"
+                />
+                {%else%}
+                <input type="date" id="paymentdate" name="{{item[7]}}" />
+                {% endif %}
+              </td>
+              <td>{{item[3]}}</td>
+              <td>{{item[4]}}</td>
+              <td>{{item[5]}}</td>
+              <td>
+                <select name="{{item[7]}}" id="remark">
+                  {% if item[6] == "Have Not Paid" %}
+                  <option value="1" selected>Have Not Paid</option>
+                  <option value="2">Paid</option>
+                  {% elif item[6] == "Paid" %}
+                  <option value="1">Have Not Paid</option>
+                  <option value="2" selected>Paid</option>
+                  {% endif %}
+                </select>
+              </td>
+            </tr>
+            {% endfor %}
+          </table>
+        </div>
+        <input
+          type="submit"
+          value="change data"
+          style="
+            border-radius: 9px;
+            background-color: rgb(127, 225, 255);
+            border: 0px;
+            cursor: pointer;
+            margin-right: 50px;
+            padding: 12px 27px;
+            float: right;
+          "
+        />
+      </form>
+    </main>
+  </body>
+</html>
