@@ -1,6 +1,11 @@
 {% extends "custPage.html" %}
 
 {% block title %} Add Transaction {% endblock %}
+{% block logoLink %}
+<a href="{{ url_for('custPage') }}" id="logo">
+    <img src="static/3e.png" alt="" style="cursor: pointer;">
+</a>
+{% endblock %}
 {% block additionalLinkNav %}{% endblock %}
 {% block titleContent %}Add Transaction{% endblock %}
 {% block mainContent %}

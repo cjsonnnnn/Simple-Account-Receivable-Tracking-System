@@ -1,0 +1,33 @@
+{% extends "custPage.html" %}
+
+{% block title %} Add Customer {% endblock %}
+{% block logoLink %}
+<a href="{{ url_for('managerMain') }}" id="logo">
+    <img src="static/3e.png" alt="" style="cursor: pointer;">
+</a>
+{% endblock %}
+{% block additionalLinkNav %}{% endblock %}
+{% block titleContent %}Add New Customer{% endblock %}
+{% block mainContent %}
+<div id="containerFormEditProfileCust">
+    <form action="/addcustomerprocess" , method="post">
+        <div class="labelEditCustomer">Name</div>
+        <input type="text" class="inputEditCustomer" name="cname">
+
+        <div class="labelEditCustomer">Address</div>
+        <input type="text" class="inputEditCustomer" name="caddress">
+
+        <div class="labelEditCustomer">Tel. Number</div>
+        <input type="text" class="inputEditCustomer" name="ctelnum">
+
+        <div class="labelEditCustomer">Password</div>
+        <input type="password" class="inputEditCustomer" name="cpassword">
+
+        <div style="display: flex; justify-content: center; margin-top: 27px;">
+            <input type="submit" value="submit"
+                style="padding: 18px 36px; background-color: rgb(127, 225, 255); border: none; border-radius: 9px; font-size: 18px; cursor: pointer;">
+        </div>
+    </form>
+</div>
+
+{% endblock %}

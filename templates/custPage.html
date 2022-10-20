@@ -18,6 +18,7 @@
             width: 100%;
             height: 100%;
             font-family: Helvetica, Arial, sans-serif;
+            overflow: hidden;
         }
 
         img {
@@ -116,6 +117,38 @@
             padding: 20px 12px;
         }
 
+        #custMainTable .tdStatus {
+            padding: 10px 0px;
+
+        }
+
+        #custMainTable .tdStatus div {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            justify-content: space-around;
+            text-align: start;
+        }
+
+        #custMainTable .tdStatusTrans a {
+            height: 38px;
+            border-radius: 9px;
+            width: 45%;
+            border: none;
+            cursor: pointer;
+            color: white;
+        }
+
+        #custMainTable .tdStatusTrans .blacklistHref {
+            background-color: #57b16c;
+            /* or, #28a745 */
+        }
+
+        #custMainTable .tdStatusTrans .editHref {
+            background-color: #d1636e;
+            /* or #dc3545 */
+        }
+
 
         /* input stuffs */
         #inputNominal:active,
@@ -156,6 +189,34 @@
         }
 
 
+        /* Edit Profile Manager */
+        #containerFormEditProfileCust {
+            margin: 27px auto;
+            width: 50%;
+            border: 2px solid rgb(127, 225, 255);
+            border-radius: 27px;
+            padding: 36px 45px;
+            font-size: 18px;
+        }
+
+        .labelEditCustomer {
+            margin-top: 11px;
+            margin-bottom: 4px;
+            font-size: 18px;
+        }
+
+
+        .inputEditCustomer,
+        .inputEditCustomer:active {
+            margin-bottom: 11px;
+            outline: none;
+            border: none;
+            border-bottom: 2px solid rgb(127, 225, 255);
+            width: 90%;
+            font-size: 18px;
+        }
+
+
         /* responsive stuffs */
         @media only screen and (min-width: 486px) and (max-width: 756px) {
             #custNavbar ul {
@@ -171,7 +232,6 @@
             #custNavbar #logo {
                 margin-left: 18px;
                 height: 63%;
-                background-color: blue;
             }
 
             #custNavbar li {
@@ -218,9 +278,11 @@
 <body>
     <header>
         <div id="custNavbar">
+            {% block logoLink %}
             <a href="{{ url_for('custPage') }}" id="logo">
                 <img src="static/3e.png" alt="" style="cursor: pointer;">
             </a>
+            {% endblock %}
             <ul>
                 {% block additionalLinkNav %}
                 <li>
