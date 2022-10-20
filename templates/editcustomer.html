@@ -1,0 +1,36 @@
+{% extends "custPage.html" %}
+
+{% block title %} Edit Customer {% endblock %}
+{% block logoLink %}
+<a href="{{ url_for('managerMain') }}" id="logo">
+    <img src="static/3e.png" alt="" style="cursor: pointer;">
+</a>
+{% endblock %}
+{% block additionalLinkNav %}{% endblock %}
+{% block titleContent %}Edit Profile of {{custName}}{% endblock %}
+{% block mainContent %}
+
+<div id="containerFormEditProfileCust">
+    <form action="/editcustomerprocess" , method="post">
+        <input type="text" style="display: none;" value="{{customerdata.customer_id}}" name="thecustomer_id">
+
+        <div class="labelEditCustomer">Name</div>
+        <input type="text" class="inputEditCustomer" value="{{customerdata.name}}" name="cname">
+
+        <div class="labelEditCustomer">Address</div>
+        <input type="text" class="inputEditCustomer" value="{{customerdata.address}}" name="caddress">
+
+        <div class="labelEditCustomer">Tel. Number</div>
+        <input type="text" class="inputEditCustomer" value="{{customerdata.tel_num}}" name="ctelnum">
+
+        <div class="labelEditCustomer">Password</div>
+        <input type="password" class="inputEditCustomer" value="{{customerdata.password}}" name="cpassword">
+
+        <div style="display: flex; justify-content: center; margin-top: 27px;">
+            <input type="submit" value="submit"
+                style="padding: 18px 36px; background-color: rgb(127, 225, 255); border: none; border-radius: 9px; font-size: 18px; cursor: pointer;">
+        </div>
+    </form>
+</div>
+
+{% endblock %}

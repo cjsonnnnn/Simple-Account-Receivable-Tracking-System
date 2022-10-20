@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin Sale</title>
+  <title>3E | Admin Sale</title>
   <style>
     * {
       box-sizing: border-box;
@@ -18,6 +18,7 @@
       width: 100%;
       height: 100%;
       font-family: Helvetica, Arial, sans-serif;
+      overflow: hidden;
     }
 
     img {
@@ -26,6 +27,11 @@
       max-width: 100%;
       object-fit: cover;
     }
+
+    #tableTray::-webkit-scrollbar {
+      display: none;
+    }
+
 
     /* customer navbar */
     #custNavbar {
@@ -69,6 +75,7 @@
       text-decoration: none;
       color: black;
     }
+
 
     /* the customer table / main content */
     #tableTray {
@@ -114,6 +121,38 @@
       padding: 20px 12px;
     }
 
+    #custMainTable .tdStatus {
+      padding: 10px 0px;
+    }
+
+    #custMainTable .tdStatus div {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      justify-content: space-around;
+      text-align: start;
+    }
+
+    #custMainTable .tdStatusTrans a {
+      height: 38px;
+      border-radius: 9px;
+      width: 45%;
+      border: none;
+      cursor: pointer;
+      color: white;
+    }
+
+    #custMainTable .tdStatusTrans .blacklistHref {
+      background-color: #57b16c;
+      /* or, #28a745 */
+    }
+
+    #custMainTable .tdStatusTrans .editHref {
+      background-color: #d1636e;
+      /* or #dc3545 */
+    }
+
+
     /* input stuffs */
     #inputNominal:active,
     #inputNominal {
@@ -125,8 +164,9 @@
       margin-bottom: 15px;
     }
 
+
     /* radio */
-    input[type="radio"] {
+    input[type=radio] {
       display: none;
     }
 
@@ -134,7 +174,7 @@
       cursor: pointer;
     }
 
-    input[type="radio"]:checked+label {
+    input[type=radio]:checked+label {
       background-color: rgb(127, 225, 255);
     }
 
@@ -151,6 +191,35 @@
       text-align: center;
     }
 
+
+    /* Edit Profile Manager */
+    #containerFormEditProfileCust {
+      margin: 27px auto;
+      width: 50%;
+      border: 2px solid rgb(127, 225, 255);
+      border-radius: 27px;
+      padding: 36px 45px;
+      font-size: 18px;
+    }
+
+    .labelEditCustomer {
+      margin-top: 11px;
+      margin-bottom: 4px;
+      font-size: 18px;
+    }
+
+
+    .inputEditCustomer,
+    .inputEditCustomer:active {
+      margin-bottom: 11px;
+      outline: none;
+      border: none;
+      border-bottom: 2px solid rgb(127, 225, 255);
+      width: 90%;
+      font-size: 18px;
+    }
+
+
     /* responsive stuffs */
     @media only screen and (min-width: 486px) and (max-width: 756px) {
       #custNavbar ul {
@@ -166,7 +235,6 @@
       #custNavbar #logo {
         margin-left: 18px;
         height: 63%;
-        background-color: blue;
       }
 
       #custNavbar li {
@@ -213,13 +281,13 @@
 <body>
   <header>
     <div id="custNavbar">
-      <a id="logo">
+      <a id="logo" href="{{ url_for('get_invoice_admin') }}">
         <img src="static/3e.png" alt="" style="cursor: pointer" />
       </a>
       <ul>
-        <li>
+        <!-- <li>
           <a class="linkNav" href="{{ url_for('logout') }}"> Change Data </a>
-        </li>
+        </li> -->
         <li>
           <a class="linkNav" href="{{ url_for('logout') }}"> Logout </a>
         </li>
@@ -227,6 +295,10 @@
     </div>
   </header>
   <main>
+    <br>
+    <div style="text-align: center;">
+      <h1>All Transactions for Sale</h1>
+    </div>
     <form action="/sales" method="post">
       <div id="tableTray">
         <table id="custMainTable" cellspacing="0" cellpadding="12">
@@ -248,27 +320,27 @@
             <td>{{item[3]}}</td>
             <td>{{item[4]}}</td>
             <td>{{item[5]}}</td>
-            <td>
-              <select name="{{item[7]}}" id="remark">
-                {% if item[6] == "Not Registered" %}
-                <option value="0" selected>Not Registered</option>
-                <option value="1">Have Not Paid</option>
-                {% elif item[6] == "Have Not Paid" %}
-                <option value="0">Not Registered</option>
-                <option value="1" selected>Have Not Paid</option>
-
-                {% else %}
-                <option value="3" selected disabled hidden labeled="Paid">
-                  Paid
-                </option>
-                {% endif %}
-              </select>
+            <td class="tdStatus">
+              {% if item[6] == "WAITING" %}
+              <div>
+                <a href="{{ url_for('salesprocess', inv_id=item[0], order=1) }}"
+                  style="background-color: #28a745; padding: 14px 32px; border-radius: 10px; text-decoration: none; color: white; margin-bottom: 9px;"
+                  class="blacklistHref">ACCEPT</a>
+              </div>
+              <div>
+                <a href="{{ url_for('salesprocess', inv_id=item[0], order=0) }}"
+                  style="background-color: #d1636e; padding: 14px 41px; border-radius: 10px; text-decoration: none; color: white;"
+                  class="editHref">DENY</a>
+              </div>
+              {% else %}
+              {{item[6]}}
+              {% endif %}
             </td>
           </tr>
           {% endfor %}
         </table>
       </div>
-      <input type="submit" value="change data" style="
+      <!-- <input type="submit" value="change data" style="
             border-radius: 9px;
             background-color: rgb(127, 225, 255);
             border: 0px;
@@ -276,7 +348,7 @@
             margin-right: 50px;
             padding: 12px 27px;
             float: right;
-          " />
+          " /> -->
     </form>
   </main>
 </body>

@@ -1,0 +1,75 @@
+{% extends "custPage.html" %}
+
+{% block title %} Manager Main {% endblock %}
+{% block logoLink %}
+<a href="{{ url_for('managerMain') }}" id="logo">
+    <img src="static/3e.png" alt="" style="cursor: pointer;">
+</a>
+{% endblock %}
+{% block additionalLinkNav %}
+<!-- <li>
+    <a class="linkNav" href="">
+        Growth
+    </a>
+</li> -->
+<li>
+    <a class="linkNav" href="{{ url_for('addCustomer') }}">
+        Add Customer
+    </a>
+</li>
+<li>
+    <a class="linkNav" href="">
+        Blacklist List
+    </a>
+</li>
+{% endblock %}
+{% block titleContent %}Customers{% endblock %}
+{% block mainContent %}
+<div id="tableTray">
+    <table id="custMainTable">
+        <tr class="trTH">
+            <th>Customer ID</th>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Tel. Number</th>
+            <th>Status</th>
+            <th>Action</th>
+            <th>Transactions</th>
+        </tr>
+        {% for i in range(customers|length) %}
+        <tr class="trTD">
+            <td>{{customers[i].customer_id}}</td>
+            <td>{{customers[i].name}}</td>
+            <td>{{customers[i].address}}</td>
+            <td>{{customers[i].tel_num}}</td>
+            <td>{{customers[i].status}}</td>
+            <td class="tdStatus">
+                {% if customers[i].status != "BLACKLIST" %}
+                <div>
+                    <a href="{{ url_for('blacklistCust', cust_id=customers[i].customer_id) }}"
+                        style="background-color: #d1636e; padding: 14px 32px; border-radius: 10px; text-decoration: none; color: white; margin-bottom: 9px;"
+                        class="blacklistHref">Blacklist</a>
+                </div>
+                {% else %}
+                <div>
+                    <a href="{{ url_for('unblacklistCust', cust_id=customers[i].customer_id) }}"
+                        style="background-color: #28a745; padding: 14px 22px; border-radius: 10px; text-decoration: none; color: white; margin-bottom: 9px;"
+                        class="blacklistHref">Unblacklist</a>
+                </div>
+                {% endif %}
+                <div>
+                    <a href="{{ url_for('editCustomer', cust_id=customers[i].customer_id) }}"
+                        style="background-color: #28a745; padding: 14px 47px; border-radius: 10px; text-decoration: none; color: white;"
+                        class="editHref">Edit</a>
+                </div>
+            </td>
+            <td>
+                <a href="{{ url_for('showTransactions', cust_id=customers[i].customer_id) }}"
+                    style="background-color: rgb(127, 225, 255); padding: 14px 22px; border-radius: 10px; text-decoration: none; color: black;">See
+                    More...</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}
