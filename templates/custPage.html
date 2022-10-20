@@ -38,6 +38,13 @@
             padding: 4px 0px;
         }
 
+        #custNavbar #logo {
+            height: 100%;
+            margin-left: 54px;
+            overflow: hidden;
+            border-radius: 9px;
+        }
+
         #custNavbar ul {
             list-style-type: none;
             margin-right: 54px;
@@ -67,8 +74,8 @@
 
         /* the customer table / main content */
         #tableTray {
-            overflow-y: scroll;
-            overflow-x: hidden;
+            overflow-y: auto;
+            overflow-x: auto;
             border-radius: 27px;
             padding: 0;
             margin: 0;
@@ -121,6 +128,7 @@
             margin-bottom: 15px;
         }
 
+
         /* radio */
         input[type=radio] {
             display: none;
@@ -133,14 +141,84 @@
         input[type=radio]:checked+label {
             background-color: rgb(127, 225, 255);
         }
+
+        .labelRadio {
+            padding: 27px 12px;
+            border: 2px solid rgb(127, 225, 255);
+            width: 20%;
+            margin: 18px;
+            border-radius: 18px;
+            font-size: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+
+        /* responsive stuffs */
+        @media only screen and (min-width: 486px) and (max-width: 756px) {
+            #custNavbar ul {
+                width: 70%;
+            }
+        }
+
+        @media only screen and (max-width: 485px) {
+            #custNavbar {
+                height: 140px;
+            }
+
+            #custNavbar #logo {
+                margin-left: 18px;
+                height: 63%;
+                background-color: blue;
+            }
+
+            #custNavbar li {
+                display: block;
+                text-align: end;
+            }
+
+            #custNavbar ul {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-around;
+                height: 90%;
+                width: 70%;
+                margin-right: 18px;
+            }
+        }
+
+        @media only screen and (min-width: 468px) and (max-width: 873px) {
+            .labelRadio {
+                width: 40%;
+            }
+        }
+
+        @media only screen and (max-width: 467px) {
+            .labelRadio {
+                width: 72%;
+            }
+
+            #durTray {
+                margin-bottom: 18px;
+            }
+        }
+
+        @media only screen and (max-width: 558px) {
+
+            #inputNominal:active,
+            #inputNominal {
+                width: 40%;
+            }
+        }
     </style>
 </head>
 
 <body>
     <header>
         <div id="custNavbar">
-            <a style="height: 100%; margin-left: 54px; overflow: hidden; border-radius: 9px;"
-                href="{{ url_for('custPage') }}">
+            <a href="{{ url_for('custPage') }}" id="logo">
                 <img src="static/3e.png" alt="" style="cursor: pointer;">
             </a>
             <ul>
@@ -159,7 +237,6 @@
             </ul>
         </div>
     </header>
-
     <main>
         <br>
         <div style="text-align: center;">
