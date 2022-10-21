@@ -14,9 +14,6 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 
 
-
-
-
 # create database models
 class Customer(db.Model):
     __tablename__ = "customer"
@@ -63,11 +60,11 @@ class Employee(db.Model):
 
     def __init__(self, name, password, role):
         if role == "admin_sale":
-            self.employee_id = "s-" + datetime.now().strftime('%Y%m%d%H%M%S')
+            self.employee_id = "s-" + datetime.now().strftime("%Y%m%d%H%M%S")
         elif role == "admin_finance":
-            self.employee_id = "f-" + datetime.now().strftime('%Y%m%d%H%M%S')
+            self.employee_id = "f-" + datetime.now().strftime("%Y%m%d%H%M%S")
         elif role == "manager":
-            self.employee_id = "m-" + datetime.now().strftime('%Y%m%d%H%M%S')
+            self.employee_id = "m-" + datetime.now().strftime("%Y%m%d%H%M%S")
         self.name = name
         self.password = password
         self.role = role
@@ -105,16 +102,15 @@ class SaleInvoice(db.Model):
     remark_id = db.Column(db.String(200), nullable=False)
 
     def __init__(self, total, customer_id, duration, remark_id, employee_id="NULL"):
-        self.invoice_id = "invs-" + datetime.now().strftime('%Y%m%d%H%M%S')
-        self.sale_date = datetime.now().strftime('%Y-%m-%d')
-        self.payment_date = (datetime.now() + timedelta(days=duration*30)).strftime('%Y-%m-%d')
+        self.invoice_id = "invs-" + datetime.now().strftime("%Y%m%d%H%M%S")
+        self.sale_date = datetime.now().strftime("%Y-%m-%d")
+        self.payment_date = (datetime.now() + timedelta(days=duration * 30)).strftime(
+            "%Y-%m-%d"
+        )
         self.total = total
         self.employee_id = employee_id
         self.customer_id = customer_id
         self.remark_id = remark_id
-
-
-
 
 
 # functions
@@ -122,7 +118,6 @@ class SaleInvoice(db.Model):
 @app.route("/")
 def home():
     return render_template("login.html")
-
 
 
 # customer page stuffs
@@ -136,9 +131,11 @@ def custPage():
         .all(),
     )
 
+
 @app.route("/addtransaction")
 def newTransaction():
     return render_template("addtransaction.html")
+
 
 @app.route("/addtransactionprocess", methods=["POST"])
 def newtransactionProcess():
@@ -165,13 +162,13 @@ def newtransactionProcess():
     # go back to cust page
     return redirect(url_for("custPage"))
 
+
 @app.route("/payprocess_<inv_id>")
 def payProcess(inv_id):
     theInvoice = SaleInvoice.query.filter_by(invoice_id=inv_id).first()
     theInvoice.remark_id = "WAITING PAY"
     db.session.commit()
-    return redirect(url_for('custPage'))
-
+    return redirect(url_for("custPage"))
 
 
 # login and signup stuffs
@@ -189,6 +186,7 @@ def login():
         return redirect(url_for("signup"))
     else:
         return render_template("login.html")
+
 
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
@@ -210,27 +208,29 @@ def signup():
     else:
         return render_template("signup.html")
 
-@app.route('/loginadmin', methods=['GET', 'POST'])
-def loginadmin(): 
-    if request.method == 'POST':
-        adminName = request.form['name']
+
+@app.route("/loginadmin", methods=["GET", "POST"])
+def loginadmin():
+    if request.method == "POST":
+        adminName = request.form["name"]
 
         found_admin = Employee.query.filter_by(name=adminName).first()
         if found_admin:
             if request.form["password"] == found_admin.password:
-                if found_admin.role == 'admin_sale':
+                if found_admin.role == "admin_sale":
                     session["admin_sale_id"] = found_admin.employee_id
-                    return redirect(url_for("get_invoice_admin")) #admin sale page
-                elif found_admin.role == 'admin_finance':
+                    return redirect(url_for("get_invoice_admin"))  # admin sale page
+                elif found_admin.role == "admin_finance":
                     session["admin_finance_id"] = found_admin.employee_id
-                    return redirect(url_for("get_invoice_sale")) #admin finance page
+                    return redirect(url_for("get_invoice_sale"))  # admin finance page
                 else:
                     session["manager_id"] = found_admin.employee_id
-                    return redirect(url_for("managerMain")) #admin manager page
+                    return redirect(url_for("managerMain"))  # admin manager page
 
         return redirect(url_for("loginadmin"))
     else:
         return render_template("loginadmin.html")
+
 
 @app.route("/logout")
 def logout():
@@ -239,7 +239,6 @@ def logout():
     session.pop("admin_finance_id", None)
     session.pop("manager_id", None)
     return redirect(url_for("login"))
-
 
 
 # admin sale and admin finance stuffs
@@ -273,11 +272,12 @@ def get_invoice_admin():
                 total[i],
                 employee_id[i],
                 customer_id[i],
-                remark[i]
+                remark[i],
             ]
         )
 
     return render_template("admin_sale.html", data=table)
+
 
 @app.route("/salesprocess_<inv_id>_<order>")
 def salesprocess(inv_id, order):
@@ -289,7 +289,8 @@ def salesprocess(inv_id, order):
     db.session.commit()
     theInvoice.employee_id = session["admin_sale_id"]
     db.session.commit()
-    return redirect(url_for('get_invoice_admin'))
+    return redirect(url_for("get_invoice_admin"))
+
 
 @app.route("/finance", methods=["GET", "POST"])
 def get_invoice_sale():
@@ -311,7 +312,6 @@ def get_invoice_sale():
         customer_id.append(i.customer_id)
         remark.append(i.remark_id)
 
-
     table = []
     for i in range(len(invoice_id)):
         table.append(
@@ -322,11 +322,12 @@ def get_invoice_sale():
                 total[i],
                 employee_id[i],
                 customer_id[i],
-                remark[i]
+                remark[i],
             ]
         )
 
     return render_template("admin_finance.html", data=table)
+
 
 @app.route("/financeprocess_<inv_id>_<order>")
 def financeprocess(inv_id, order):
@@ -338,51 +339,84 @@ def financeprocess(inv_id, order):
     db.session.commit()
     theInvoice.employee_id = session["admin_finance_id"]
     db.session.commit()
-    return redirect(url_for('get_invoice_admin'))
-
+    return redirect(url_for("get_invoice_admin"))
 
 
 # manager stuffs
 @app.route("/manager")
 def managerMain():
-    return render_template("managerMain.html", customers=Customer.query.order_by(Customer.name.asc()).all())
+    return render_template(
+        "managerMain.html", customers=Customer.query.order_by(Customer.name.asc()).all()
+    )
+
 
 @app.route("/showtransactions_<cust_id>")
 def showTransactions(cust_id):
-    return render_template("showtransactions.html", custTransactions=SaleInvoice.query.filter_by(customer_id=cust_id).order_by(SaleInvoice.sale_date.asc()).all(), custName=Customer.query.filter_by(customer_id=cust_id).first().name, custo_id=cust_id)
+    return render_template(
+        "showtransactions.html",
+        custTransactions=SaleInvoice.query.filter_by(customer_id=cust_id)
+        .order_by(SaleInvoice.sale_date.asc())
+        .all(),
+        custName=Customer.query.filter_by(customer_id=cust_id).first().name,
+        custo_id=cust_id,
+    )
+
 
 @app.route("/doblacklist_<cust_id>")
 def blacklistCust(cust_id):
     customer = Customer.query.filter_by(customer_id=cust_id).first()
     customer.status = "BLACKLIST"
     db.session.commit()
-    return redirect(url_for('managerMain'))
+    return redirect(url_for("managerMain"))
+
 
 @app.route("/dounblacklist_<cust_id>")
 def unblacklistCust(cust_id):
     customer = Customer.query.filter_by(customer_id=cust_id).first()
     customer.status = "ACTIVE"
     db.session.commit()
-    return redirect(url_for('managerMain'))
+    return redirect(url_for("managerMain"))
+
+
+@app.route("/doblacklist1_<cust_id>")
+def blacklistCust1(cust_id):
+    customer = Customer.query.filter_by(customer_id=cust_id).first()
+    customer.status = "BLACKLIST"
+    db.session.commit()
+    return redirect(url_for("blacklist"))
+
+
+@app.route("/dounblacklist1_<cust_id>")
+def unblacklistCust1(cust_id):
+    customer = Customer.query.filter_by(customer_id=cust_id).first()
+    customer.status = "ACTIVE"
+    db.session.commit()
+    return redirect(url_for("blacklist"))
+
 
 @app.route("/voidtransaction_<inv_id>_<cust_id>")
 def voidTransaction(inv_id, cust_id):
     theInvoice = SaleInvoice.query.filter_by(invoice_id=inv_id).first()
     theInvoice.remark_id = "CANCELED"
     db.session.commit()
-    return redirect(url_for('showTransactions', cust_id=cust_id))
+    return redirect(url_for("showTransactions", cust_id=cust_id))
+
 
 @app.route("/uncanceledtransaction_<inv_id>_<cust_id>")
 def uncanceledTransaction(inv_id, cust_id):
     theInvoice = SaleInvoice.query.filter_by(invoice_id=inv_id).first()
     theInvoice.remark_id = "PAID"
     db.session.commit()
-    return redirect(url_for('showTransactions', cust_id=cust_id))
+    return redirect(url_for("showTransactions", cust_id=cust_id))
+
 
 @app.route("/editcustomer_<cust_id>")
 def editCustomer(cust_id):
     customer = Customer.query.filter_by(customer_id=cust_id).first()
-    return render_template("editcustomer.html", customerdata=customer, custName=customer.name)
+    return render_template(
+        "editcustomer.html", customerdata=customer, custName=customer.name
+    )
+
 
 @app.route("/editcustomerprocess", methods=["POST"])
 def editcustomerProcess():
@@ -395,11 +429,13 @@ def editcustomerProcess():
     db.session.commit()
 
     # go back to manager main page
-    return redirect(url_for('managerMain'))
+    return redirect(url_for("managerMain"))
+
 
 @app.route("/addcustomer")
 def addCustomer():
     return render_template("addcustomer.html")
+
 
 @app.route("/addcustomerprocess", methods=["POST"])
 def addcustomerProcess():
@@ -414,11 +450,12 @@ def addcustomerProcess():
     db.session.commit()
 
     # go back to manager main page
-    return redirect(url_for('managerMain'))
+    return redirect(url_for("managerMain"))
+
 
 @app.route("/blacklist", methods=["GET", "POST"])
 def blacklist():
-    a = Customer.query.filter_by(status="Blacklisted").all()
+    a = Customer.query.filter_by(status="BLACKLIST").all()
 
     cust_id = []
     name = []
@@ -446,10 +483,6 @@ def blacklist():
         )
 
     return render_template("blacklist.html", data=table)
-
-    
-
-
 
 
 if __name__ == "__main__":
