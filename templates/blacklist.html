@@ -85,7 +85,7 @@
       padding: 0;
       margin: 0;
       margin: 27px auto;
-      width: 90%;
+      width: 60%;
       height: 400px;
     }
 
@@ -276,6 +276,25 @@
         width: 40%;
       }
     }
+
+    @media only screen and (min-width: 468px) and (max-width: 873px) {
+      #tableTray { 
+        width: 90%;
+      }
+    }
+
+    @media only screen and (max-width: 467px) {
+      #tableTray { 
+        width: 70%;
+      }
+    }
+
+    @media only screen and (max-width: 558px) {
+
+      #tableTray {
+        width: 70%;
+      }
+    }
   </style>
 </head>
 
@@ -286,11 +305,11 @@
         <img src="static/3e.png" alt="" style="cursor: pointer" />
       </a>
       <ul>
-        <!-- {% block additionalLinkNav %} -->
+        {% block additionalLinkNav %}
         <li>
-          <a class="linkNav"> Back </a>
+          <a class="linkNav" href="{{ url_for('managerMain') }}"> Back </a>
         </li>
-        <!-- {% endblock %} -->
+        {% endblock %}
         <li>
           <a class="linkNav" href="{{ url_for('logout') }}"> Logout </a>
         </li>
@@ -298,6 +317,10 @@
     </div>
   </header>
   <main>
+    <br>
+    <div style="text-align: center;">
+      <h1>Blacklist List</h1>
+    </div>
     <form action="/blacklist" method="post">
       <div id="tableTray">
         <table id="custMainTable">
@@ -315,25 +338,24 @@
             <td>{{item[1]}}</td>
             <td>{{item[2]}}</td>
             <td>{{item[3]}}</td>
-            <td>
-              <select name="{{item[5]}}" id="remark">
-                <option value="not defined">not defined</option>
-                <option value="Blacklisted" selected>Blacklisted</option>
-              </select>
-            </td>
+            <td class="tdStatus">
+              {% if  item[4] != "BLACKLIST" %}
+              <div>
+                  <a href="{{ url_for('blacklistCust1', cust_id=item[0]) }}"
+                      style="background-color: #d1636e; padding: 14px 32px; border-radius: 10px; text-decoration: none; color: white; margin-bottom: 9px;"
+                      class="blacklistHref">Blacklist</a>
+              </div>
+              {% else %}
+              <div>
+                  <a href="{{ url_for('unblacklistCust1', cust_id=item[0]) }}"
+                      style="background-color: #28a745; padding: 14px 22px; border-radius: 10px; text-decoration: none; color: white; margin-bottom: 9px;"
+                      class="blacklistHref">Unblacklist</a>
+              </div>
+              {% endif %}
           </tr>
           {% endfor %}
         </table>
       </div>
-      <input type="submit" value="change data" style="
-            border-radius: 9px;
-            background-color: rgb(127, 225, 255);
-            border: 0px;
-            cursor: pointer;
-            margin-right: 50px;
-            padding: 12px 27px;
-            float: right;
-          " />
     </form>
   </main>
 </body>
