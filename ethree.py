@@ -263,19 +263,6 @@ def get_invoice_admin():
         customer_id.append(i.customer_id)
         remark.append(i.remark_id)
 
-    for i in range(len(remark)):
-
-        # replace hardik with shardul
-        if remark[i] == "0":
-            remark[i] = "Not Registered"
-
-        # replace pant with ishan
-        elif remark[i] == "1":
-            remark[i] = "Have Not Paid"
-
-        elif remark[i] == "2":
-            remark[i] = "Paid"
-
     table = []
     for i in range(len(invoice_id)):
         table.append(
@@ -286,8 +273,7 @@ def get_invoice_admin():
                 total[i],
                 employee_id[i],
                 customer_id[i],
-                remark[i],
-                invoice_id[i],
+                remark[i]
             ]
         )
 
@@ -316,21 +302,6 @@ def get_invoice_sale():
     customer_id = []
     remark = []
 
-    param = dict()
-    for i in request.form.keys():
-        param[i] = request.form.getlist(i)
-
-    for i in param.keys():
-        if param[i][0] != "":
-            b = SaleInvoice.query.filter_by(invoice_id=i).first()
-            b.remark_id = param[i][1]
-            b.payment_date = param[i][0]
-            db.session.commit()
-        else:
-            b = SaleInvoice.query.filter_by(invoice_id=i).first()
-            b.remark_id = param[i]
-            db.session.commit()
-
     for i in a:
         invoice_id.append(i.invoice_id)
         sale_date.append(i.sale_date)
@@ -340,20 +311,6 @@ def get_invoice_sale():
         customer_id.append(i.customer_id)
         remark.append(i.remark_id)
 
-    notdone = []
-
-    for i in range(len(remark)):
-
-        # replace hardik with shardul
-        if remark[i] == "0":
-            notdone.append(i)
-
-        # replace pant with ishan
-        elif remark[i] == "1":
-            remark[i] = "Have Not Paid"
-
-        elif remark[i] == "2":
-            remark[i] = "Paid"
 
     table = []
     for i in range(len(invoice_id)):
@@ -365,12 +322,9 @@ def get_invoice_sale():
                 total[i],
                 employee_id[i],
                 customer_id[i],
-                remark[i],
-                invoice_id[i],
+                remark[i]
             ]
         )
-
-    table = [j for i, j in enumerate(table) if i not in notdone]
 
     return render_template("admin_finance.html", data=table)
 
