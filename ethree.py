@@ -37,18 +37,6 @@ class Customer(db.Model):
         self.status = "ACTIVE"
 
 
-class ActivityType(db.Model):
-    __tablename__ = "activitytype"
-    activity_id = db.Column(db.String(200), primary_key=True)
-    description = db.Column(db.String(200), nullable=False)
-
-    mActivity_re = db.relationship("ManagerActivity")
-
-    def __init__(self, activity_id, description):
-        self.activity_id = activity_id
-        self.description = description
-
-
 class Employee(db.Model):
     __tablename__ = "employee"
     employee_id = db.Column(db.String(200), primary_key=True)
@@ -80,14 +68,15 @@ class ManagerActivity(db.Model):
     customer_id = db.Column(
         db.String(200), db.ForeignKey("customer.customer_id"), nullable=False
     )
-    activity_id = db.Column(
-        db.String(200), db.ForeignKey("activitytype.activity_id"), nullable=False
+    activity = db.Column(
+        db.String(200), nullable=False
     )
 
-    def __init__(self, employee_id, customer_id, activity_id):
+    def __init__(self, employee_id, customer_id, activity):
+        self.manager_activity_id = "mid-" + datetime.now().strftime("%Y%m%d%H%M%S")
         self.employee_id = employee_id
         self.customer_id = customer_id
-        self.activity_id = activity_id
+        self.activity = activity
 
 
 class SaleInvoice(db.Model):
@@ -369,15 +358,20 @@ def blacklistCust(cust_id):
     customer = Customer.query.filter_by(customer_id=cust_id).first()
     customer.status = "BLACKLIST"
     db.session.commit()
-    return redirect(url_for("managerMain"))
-
+    manager_activity = ManagerActivity(session["manager_id"], cust_id, "BLACKLIST")
+    db.session.add(manager_activity)
+    db.session.commit()
+    return redirect(url_for('managerMain'))
 
 @app.route("/dounblacklist_<cust_id>")
 def unblacklistCust(cust_id):
     customer = Customer.query.filter_by(customer_id=cust_id).first()
     customer.status = "ACTIVE"
     db.session.commit()
-    return redirect(url_for("managerMain"))
+    manager_activity = ManagerActivity(session["manager_id"], cust_id, "UNBLACKLIST")
+    db.session.add(manager_activity)
+    db.session.commit()
+    return redirect(url_for('managerMain'))
 
 
 @app.route("/doblacklist1_<cust_id>")
@@ -395,22 +389,25 @@ def unblacklistCust1(cust_id):
     db.session.commit()
     return redirect(url_for("blacklist"))
 
-
 @app.route("/voidtransaction_<inv_id>_<cust_id>")
 def voidTransaction(inv_id, cust_id):
     theInvoice = SaleInvoice.query.filter_by(invoice_id=inv_id).first()
     theInvoice.remark_id = "CANCELED"
     db.session.commit()
-    return redirect(url_for("showTransactions", cust_id=cust_id))
-
+    manager_activity = ManagerActivity(session["manager_id"], cust_id, "VOID")
+    db.session.add(manager_activity)
+    db.session.commit()
+    return redirect(url_for('showTransactions', cust_id=cust_id))
 
 @app.route("/uncanceledtransaction_<inv_id>_<cust_id>")
 def uncanceledTransaction(inv_id, cust_id):
     theInvoice = SaleInvoice.query.filter_by(invoice_id=inv_id).first()
     theInvoice.remark_id = "PAID"
     db.session.commit()
-    return redirect(url_for("showTransactions", cust_id=cust_id))
-
+    manager_activity = ManagerActivity(session["manager_id"], cust_id, "UNVOID")
+    db.session.add(manager_activity)
+    db.session.commit()
+    return redirect(url_for('showTransactions', cust_id=cust_id))
 
 @app.route("/editcustomer_<cust_id>")
 def editCustomer(cust_id):
@@ -428,6 +425,9 @@ def editcustomerProcess():
     customer.address = request.form.get("caddress")
     customer.tel_num = request.form.get("ctelnum")
     customer.password = request.form.get("cpassword")
+    db.session.commit()
+    manager_activity = ManagerActivity(session["manager_id"], cid, "EDIT")
+    db.session.add(manager_activity)
     db.session.commit()
 
     # go back to manager main page
@@ -449,6 +449,11 @@ def addcustomerProcess():
     # create the Customer object
     customer = Customer(name, address, tel_num, password)
     db.session.add(customer)
+    db.session.commit()
+
+    # update manager_activity
+    manager_activity = ManagerActivity(session["manager_id"], customer.customer_id, "ADD")
+    db.session.add(manager_activity)
     db.session.commit()
 
     # go back to manager main page
