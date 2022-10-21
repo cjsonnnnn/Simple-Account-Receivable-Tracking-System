@@ -1,3 +1,4 @@
+import bcrypt
 from flask import Flask, redirect, request, url_for, render_template, session
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
@@ -179,10 +180,10 @@ def payProcess(inv_id):
 def login():
     if request.method == "POST":
         cust = request.form["name"]
-
+        password = request.form["password"].encode('utf-8') 
         found_cust = Customer.query.filter_by(name=cust).first()
         if found_cust:
-            if request.form["password"] == found_cust.password:
+            if bcrypt.hashpw(password, found_cust.password.encode('utf-8')) == found_cust.password.encode('utf-8'):
                 session["customer_id"] = found_cust.customer_id
                 return redirect(url_for("custPage"))
 
@@ -202,8 +203,9 @@ def signup():
             cust_name = request.form["name"]
             address = request.form["address"]
             tel_num = request.form["tel_num"]
-            password = request.form["password"]
-            new_cust = Customer(cust_name, address, tel_num, password)
+            password = request.form["password"].encode('utf-8')
+            hash_password = bcrypt.hashpw(password, bcrypt.gensalt())
+            new_cust = Customer(cust_name, address, tel_num, hash_password)
             db.session.add(new_cust)
             db.session.commit()
             return redirect(url_for("login"))
@@ -447,7 +449,6 @@ def blacklist():
 
     return render_template("blacklist.html", data=table)
 
-    
 
 
 
@@ -457,7 +458,7 @@ if __name__ == "__main__":
         db.create_all()
 
         # dummy data
-        # newempl = Employee("Aku siapa?", "ndaktau", "admin_finance")
+        # newempl = Employee("as", "222", "admin_sale")
         # db.session.add(newempl)
         # db.session.commit()
 
